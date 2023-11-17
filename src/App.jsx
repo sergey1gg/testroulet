@@ -17,9 +17,23 @@ const App = () => {
     const storedPassword = localStorage.getItem('password');
 
     if (storedPhoneNumber && storedPassword) {
+      
+      const lastLoginDate = localStorage.getItem('dateAdd');
+
+      if (lastLoginDate) {
+        const currentDate = new Date();
+        const lastDate = new Date(lastLoginDate);
+
+        const timeDifference = currentDate - lastDate;
+
+        if (timeDifference > 24 * 60 * 60 * 1000 && localStorage.getItem('gameCount') == 0) {
+          localStorage.setItem('gameCount', 3);
+        }
+      }
+
       setIsLoggedIn(true);
     }
-    else{
+    else {
 
     }
   }, []);
@@ -30,10 +44,11 @@ const App = () => {
       alert('Ошибка валидации номера');
       return;
     }
-
     localStorage.setItem('phoneNumber', phoneNumber);
-    localStorage.setItem('password', 'any_password'); 
-
+    localStorage.setItem('password', 'any_password');
+    localStorage.setItem('balance', 10);
+    localStorage.setItem('gameCount', 3);
+    localStorage.setItem('dateAdd', new Date().toISOString());
     setIsLoggedIn(true);
   };
 
@@ -43,7 +58,7 @@ const App = () => {
         <div >
         </div>
       ) : (
-        <div style={{position: 'absolute', background: 'white', zIndex: 20, width: '100%', height: '100%'}}>
+        <div style={{ position: 'absolute', background: 'white', zIndex: 20, width: '100%', height: '100%' }}>
           <p>Введите номер телефона:</p>
           <input
             type="text"
@@ -60,7 +75,7 @@ const App = () => {
           <button onClick={handleLogin}>Войти</button>
         </div>
       )}
-      <Game/>
+      <Game />
     </>
   );
 };

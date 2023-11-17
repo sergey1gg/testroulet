@@ -5,11 +5,15 @@ import { Wheel } from 'react-custom-roulette'
 
 
 const data = [
-    { option: '0', style: { backgroundColor: 'green' }},
+    { option: '0', style: { backgroundColor: 'red' }},
     { option: '1', style: { backgroundColor: 'white' } },
-    { option: '2' },
+    { option: '2',style: { backgroundColor: 'red' }  },
+    { option: '3',style: { backgroundColor: 'white' }  },
+    { option: '4',style: { backgroundColor: 'red' }  },
+    { option: '5',style: { backgroundColor: 'white' }  },
   ]
 function Game() {
+
     const fakeRecipeData = [{
       id: '1',
       name: 'Паста',
@@ -19,8 +23,8 @@ function Game() {
     }];  
     const [mustSpin, setMustSpin] = useState(false);
     const [prizeNumber, setPrizeNumber] = useState(0);
-    const [balance, setBalance] = useState(10);
-    const [gameCount, setGameCount] = useState(3);
+    const [balance, setBalance] = useState(localStorage?.getItem("balance") || 10);
+    const [gameCount, setGameCount] = useState(localStorage?.getItem("gameCount") || 3);
     const [isModalOpen, setIsModalOpen] = useState(false);
   
     const closeModal = () => {
@@ -29,7 +33,7 @@ function Game() {
   
     const handleSpinClick = () => {
   
-      if (!mustSpin && balance>=5) {
+      if (!mustSpin && balance>=5 && gameCount >0) {
         const newPrizeNumber = Math.floor(Math.random() * data.length);
         setPrizeNumber(newPrizeNumber);
         setMustSpin(true);
@@ -41,13 +45,17 @@ function Game() {
       setMustSpin(false);
       setIsModalOpen(true)
     }
-  
+  useEffect(() => {
+  localStorage.setItem("balance", balance);
+  localStorage.setItem("gameCount", gameCount);
+}, [balance, gameCount]);
     return (
       <>
       <header>
         <div>
           <h4>Balance: {balance}</h4>
           <h4>Доступино игр: {gameCount}</h4>
+          {gameCount ==0? <h4>Следующее вращение через 24ч</h4>:''}
         </div>
       </header>
       <div className='root'>

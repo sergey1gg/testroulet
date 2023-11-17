@@ -10,6 +10,8 @@ export const ModalReceipt = ({ isOpen, onClose, recipe, setBalance }) => {
     let timer;
 
     if (isOpen) {
+      setSelectedIngredients([]);
+      setShowSuccess(false);
       timer = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
@@ -40,6 +42,7 @@ export const ModalReceipt = ({ isOpen, onClose, recipe, setBalance }) => {
     if (selectedIngredients.length === 0) {
       alert('Необходимо выбрать ингредиенты');
     } else {
+      if(!showSuccess){
       const isCorrect = JSON.stringify(selectedIngredients.sort()) === JSON.stringify(recipe.trueIng.sort());
       if (isCorrect) {
         setBalance((prev) => prev + 10);
@@ -48,6 +51,7 @@ export const ModalReceipt = ({ isOpen, onClose, recipe, setBalance }) => {
         alert("Ошибка")
         onClose()
       }
+    }
     }
   };
 
@@ -61,11 +65,18 @@ export const ModalReceipt = ({ isOpen, onClose, recipe, setBalance }) => {
     <div className={`modal ${isOpen ? 'open' : ''}`}>
       <div className="modal-content">
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <div onClick={() => onClose()} style={{fontWeight: 'bold'}}>X</div>
+        <div onClick={() => onClose()} style={{fontWeight: 'bold', cursor: 'pointer'}}>X</div>
         <p>Осталось: {formatTime(timeLeft)}</p>
+        
         </div>
         <img src={recipe.image} alt={recipe.name} />
         <h2>{recipe.name}</h2>
+        {showSuccess && (
+          <div>
+            <p className="success-message">Вы угадали!</p>
+            <button>Скачать рецепт</button>
+          </div>
+        )}
         <ul>
           {recipe.ingredients.map((ingredient, index) => (
             <li
@@ -77,13 +88,9 @@ export const ModalReceipt = ({ isOpen, onClose, recipe, setBalance }) => {
             </li>
           ))}
         </ul>
+
         <button onClick={handleSubmit}>Отправить ответ</button>
-        {showSuccess && (
-          <div>
-            <p className="success-message">Вы угадали!</p>
-            <button>Скачать рецепт</button>
-          </div>
-        )}
+        
       </div>
     </div>
   );
