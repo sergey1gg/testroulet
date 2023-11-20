@@ -12,7 +12,7 @@ const data = [
     { option: '4',style: { backgroundColor: 'red' }  },
     { option: '5',style: { backgroundColor: 'white' }  },
   ]
-function Game() {
+function Game({balance, setBalance}) {
 
     const fakeRecipeData = [{
       id: '1',
@@ -23,7 +23,7 @@ function Game() {
     }];  
     const [mustSpin, setMustSpin] = useState(false);
     const [prizeNumber, setPrizeNumber] = useState(0);
-    const [balance, setBalance] = useState(localStorage?.getItem("balance") || 10);
+    
     const [gameCount, setGameCount] = useState(localStorage?.getItem("gameCount") || 3);
     const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -37,7 +37,6 @@ function Game() {
         const newPrizeNumber = Math.floor(Math.random() * data.length);
         setPrizeNumber(newPrizeNumber);
         setMustSpin(true);
-        setBalance(prev=>prev-5)
         setGameCount(prev=>prev-1)
       }
     }
@@ -67,7 +66,7 @@ function Game() {
         />
         <button onClick={handleSpinClick}>Раскрутить!</button>
       </div>
-      <ModalReceipt isOpen={isModalOpen} onClose={closeModal} recipe={fakeRecipeData[0]}setBalance={setBalance} />
+      <ModalReceipt isOpen={isModalOpen} onClose={closeModal} recipe={fakeRecipeData[0]}setBalance={setBalance} balance={balance}/>
       </>
     )
   }
